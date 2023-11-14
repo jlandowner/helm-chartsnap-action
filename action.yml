@@ -1,0 +1,57 @@
+name: helm-chartsnap-action
+description: Snapshot testing tool for Helm chart
+author: jlandowner
+
+inputs:
+  github-token:
+    description: GitHub token
+    required: true
+    default: ${{ github.token }}
+
+  version:
+    description: "The chartsnap version to use (default: v0.0.7)"
+    required: false
+    default: v0.0.7
+
+  helm-repo:
+    description: Name of the Helm repository
+    required: false
+    default: local
+
+  helm-repo-url:
+    description: URL of the Helm repository
+    required: false
+    default: local
+
+  chart:
+    description: Name of the Helm chart
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - id: setup-helm
+      uses: azure/setup-helm@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
+
+    - id: setup-chartsnap
+      run: |
+        helm plugin install https://github.com/jlandowner/helm-chartsnap
+      shell: bash
+
+    - id: helm-repo-add
+      if: inputs.helm-repo != ''
+      run: |
+        helm repo add $HELM_REPO $HELM_REPO_URL
+      env:
+        HELM_REPO: ${{ inputs.helm-repo }}
+        HELM_REPO_URL: ${{ inputs.helm-repo-url }}
+      shell: bash
+
+    - id: run-chartsnap
+      run: |
+        helm chartsnap -c $CHART
+      env:
+        CHART: ${{ inputs.chart }}
+      shell: bash
