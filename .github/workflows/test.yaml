@@ -1,0 +1,28 @@
+on: [push]
+
+jobs:
+  test_action_remote:
+    runs-on: ubuntu-latest
+    name: Remote chart snapshot
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Snapshot
+        uses: ./
+        id: chartsnap
+        with:
+          chart: ingress-nginx/ingress-nginx
+          repo: https://kubernetes.github.io/ingress-nginx
+
+  test_action_local:
+    runs-on: ubuntu-latest
+    name: Local chart snapshot
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Snapshot
+        uses: ./
+        id: chartsnap
+        with:
+          chart: test/app1/
+
