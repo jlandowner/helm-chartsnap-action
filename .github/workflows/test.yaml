@@ -11,7 +11,7 @@ jobs:
         uses: ./
         id: chartsnap
         with:
-          chart: ingress-nginx/ingress-nginx
+          chart: ingress-nginx
           repo: https://kubernetes.github.io/ingress-nginx
 
   test_action_local:
