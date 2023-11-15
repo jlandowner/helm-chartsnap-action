@@ -13,7 +13,7 @@ inputs:
 
   values:
     description: Path to the values file or directroy
-    required: true
+    required: false
 
 runs:
   using: composite
@@ -28,11 +28,9 @@ runs:
 
     - id: run-chartsnap
       run: |
-        if [[ $REPO != "" ]]; then
-          helm chartsnap -c $CHART -f $VALUES -- --repo $REPO
-        else
-          helm chartsnap -c $CHART -f $VALUES
-        fi
+        [[ -z $VALUES ]] && OPT_VALUES="-f $VALUES"
+        [[ -z $REPO ]] && OPT_ADDTIONAL_ARGS="-- --repo $REPO"
+        helm chartsnap -c $CHART $OPT_VALUES $OPT_ADDTIONAL_ARGS
       env:
         CHART: ${{ inputs.chart }}
         REPO: ${{ inputs.repo }}
