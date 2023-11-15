@@ -25,4 +25,3 @@ jobs:
         id: chartsnap
         with:
           chart: test/app1/
-

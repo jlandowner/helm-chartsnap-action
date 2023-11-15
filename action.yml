@@ -11,6 +11,10 @@ inputs:
     description: Name of the Helm chart
     required: true
 
+  values:
+    description: Path to the values file or directroy
+    required: true
+
 runs:
   using: composite
   steps:
@@ -25,11 +29,12 @@ runs:
     - id: run-chartsnap
       run: |
         if [[ $REPO != "" ]]; then
-          helm chartsnap -c $CHART -- --repo $REPO
+          helm chartsnap -c $CHART -f $VALUES -- --repo $REPO
         else
-          helm chartsnap -c $CHART
+          helm chartsnap -c $CHART -f $VALUES
         fi
       env:
         CHART: ${{ inputs.chart }}
         REPO: ${{ inputs.repo }}
+        VALUES: ${{ inputs.values }}
       shell: bash
