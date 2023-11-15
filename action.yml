@@ -15,6 +15,14 @@ inputs:
     description: Path to the values file or directroy
     required: false
 
+  update_snapshot:
+    description: If set, update snapshot and create pull request
+    required: false
+
+  disable_create_pull_request:
+    description: If set, run create pull request action https://github.com/peter-evans/create-pull-request
+    required: false
+
 runs:
   using: composite
   steps:
@@ -29,10 +37,34 @@ runs:
     - id: run-chartsnap
       run: |
         [[ ! -z $VALUES ]] && OPT_VALUES="-f $VALUES"
+        [[ ! -z $UPDATE_SNAPSHOT ]] && OPT_UPDATE_SNAPSHOT="-u"
         [[ ! -z $REPO ]] && OPT_ADDTIONAL_ARGS="-- --repo $REPO"
-        helm chartsnap -c $CHART $OPT_VALUES $OPT_ADDTIONAL_ARGS
+        helm chartsnap -c $CHART $OPT_VALUES $OPT_UPDATE_SNAPSHOT $OPT_ADDTIONAL_ARGS
       env:
-        CHART: ${{ inputs.chart }}
-        REPO: ${{ inputs.repo }}
+        CHART:  ${{ inputs.chart }}
+        REPO:   ${{ inputs.repo }}
         VALUES: ${{ inputs.values }}
+        UPDATE_SNAPSHOT: ${{ inputs.update_snapshot }}
+      shell: bash
+
+    - name: Create Pull Request
+      id: cpr
+      if: ${{ inputs.update_snapshot }} && ${{ inputs.disable_create_pull_request }}
+      uses: peter-evans/create-pull-request@v5
+      with:
+        commit-message: Update snapshot by helm chartsnap action
+        branch: helm-chartsnap-action
+        title: Update helm chart snapshot ${{ inputs.chart }}
+        body: |
+          Update snapshot by helm chartsnap action
+          
+            CHART:  ${{ inputs.chart }}
+            REPO:   ${{ inputs.repo }}
+            VALUES: ${{ inputs.values }}
+
+    - name: Check outputs
+      if: ${{ steps.cpr.outputs.pull-request-number }}
+      run: |
+        echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
       shell: bash
