@@ -26,4 +26,19 @@ jobs:
         id: chartsnap
         with:
           chart: test/app1/
-          values: 
+
+  test_action_remote_create_pr:
+    needs: test_action_remote
+    runs-on: ubuntu-latest
+    name: Remote chart snapshot and create PR
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Snapshot
+        uses: ./
+        id: chartsnap
+        with:
+          chart: ingress-nginx
+          repo: https://kubernetes.github.io/ingress-nginx
+          values: test/remote/ingress-nginx.values.yaml
+          update_snapshot: true

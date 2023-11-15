@@ -49,12 +49,13 @@ runs:
 
     - name: Create Pull Request
       id: cpr
-      if: ${{ inputs.update_snapshot }} && ${{ inputs.disable_create_pull_request }}
+      if: ${{ inputs.update_snapshot && inputs.disable_create_pull_request }}
       uses: peter-evans/create-pull-request@v5
       with:
         commit-message: Update snapshot by helm chartsnap action
         branch: helm-chartsnap-action
         title: Update helm chart snapshot ${{ inputs.chart }}
+        delete-branch: true
         body: |
           Update snapshot by helm chartsnap action
           
