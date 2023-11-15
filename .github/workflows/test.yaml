@@ -1,9 +1,12 @@
 on: [push]
 
 jobs:
-  test_action_remote:
+  test_action_remote_create_pr:
     runs-on: ubuntu-latest
-    name: Remote chart snapshot
+    name: Remote chart snapshot and create PR
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -14,6 +17,7 @@ jobs:
           chart: ingress-nginx
           repo: https://kubernetes.github.io/ingress-nginx
           values: test/remote/ingress-nginx.values.yaml
+          update_snapshot: true
 
   test_action_local:
     runs-on: ubuntu-latest
@@ -26,19 +30,3 @@ jobs:
         id: chartsnap
         with:
           chart: test/app1/
-
-  test_action_remote_create_pr:
-    needs: test_action_remote
-    runs-on: ubuntu-latest
-    name: Remote chart snapshot and create PR
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Snapshot
-        uses: ./
-        id: chartsnap
-        with:
-          chart: ingress-nginx
-          repo: https://kubernetes.github.io/ingress-nginx
-          values: test/remote/ingress-nginx.values.yaml
-          update_snapshot: true
