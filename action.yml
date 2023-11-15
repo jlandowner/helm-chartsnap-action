@@ -28,8 +28,8 @@ runs:
 
     - id: run-chartsnap
       run: |
-        [[ -z $VALUES ]] && OPT_VALUES="-f $VALUES"
-        [[ -z $REPO ]] && OPT_ADDTIONAL_ARGS="-- --repo $REPO"
+        [[ ! -z $VALUES ]] && OPT_VALUES="-f $VALUES"
+        [[ ! -z $REPO ]] && OPT_ADDTIONAL_ARGS="-- --repo $REPO"
         helm chartsnap -c $CHART $OPT_VALUES $OPT_ADDTIONAL_ARGS
       env:
         CHART: ${{ inputs.chart }}
