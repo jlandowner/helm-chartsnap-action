@@ -54,8 +54,11 @@ runs:
       uses: peter-evans/create-pull-request@v5
       with:
         commit-message: Update snapshot by helm chartsnap action
+        author: GitHub <noreply@github.com>
         branch: helm-chartsnap-action
         title: Update helm chart snapshot ${{ inputs.chart }}
+        labels: snapshot
+        branch-suffix: random
         delete-branch: true
         body: |
           Update snapshot by helm chartsnap action
