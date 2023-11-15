@@ -1,5 +1,5 @@
 name: helm-chartsnap-action
-description: Snapshot testing tool for Helm chart
+description: Do snapshot testing for Helm chart
 author: jlandowner
 
 inputs:
@@ -61,7 +61,7 @@ runs:
         branch-suffix: random
         delete-branch: true
         body: |
-          Update snapshot by helm chartsnap action
+          Update snapshot by helm-chartsnap-action 🤖
           
             CHART:  ${{ inputs.chart }}
             REPO:   ${{ inputs.repo }}
