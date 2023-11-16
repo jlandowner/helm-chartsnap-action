@@ -15,6 +15,10 @@ inputs:
     description: Path to the values file or directroy
     required: false
 
+  additional_args:
+    description: Addtional args for the command "helm template"
+    required: false
+
   update_snapshot:
     description: If set, update snapshot and create pull request
     required: false
@@ -38,13 +42,16 @@ runs:
       run: |
         [[ ! -z $VALUES ]] && OPT_VALUES="-f $VALUES"
         [[ ! -z $UPDATE_SNAPSHOT ]] && OPT_UPDATE_SNAPSHOT="-u"
-        [[ ! -z $REPO ]] && OPT_ADDTIONAL_ARGS="-- --repo $REPO"
-        CMD="helm chartsnap -c $CHART $OPT_VALUES $OPT_UPDATE_SNAPSHOT $OPT_ADDTIONAL_ARGS"
+        [[ ! -z $REPO ]] && OPT_REPO="--repo $REPO"
+        [[ ! -z $ADDTIONAL_ARGS ]] && OPT_ADDTIONAL_ARGS=$ADDTIONAL_ARGS
+        [[ ! -z $REPO ]] || [[ ! -z $ADDTIONAL_ARGS ]] && OPT_ARGS_SEP="-- "
+        CMD="helm chartsnap -c $CHART $OPT_VALUES $OPT_UPDATE_SNAPSHOT $OPT_ARGS_SEP $OPT_REPO $OPT_ADDTIONAL_ARGS"
         echo $CMD; eval $CMD
       env:
         CHART:  ${{ inputs.chart }}
         REPO:   ${{ inputs.repo }}
         VALUES: ${{ inputs.values }}
+        ADDTIONAL_ARGS: ${{ inputs.additional_args }}
         UPDATE_SNAPSHOT: ${{ inputs.update_snapshot }}
       shell: bash
 
