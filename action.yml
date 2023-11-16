@@ -3,28 +3,28 @@ description: Do snapshot testing for Helm chart
 author: jlandowner
 
 inputs:
-  repo:
-    description: URL of the Helm repository
-    required: false
-
   chart:
-    description: Name of the Helm chart
+    description: Name of the Helm chart in remote repository or local chart directory path
     required: true
 
+  repo:
+    description: URL of the remote Helm repository	
+    required: false
+
   values:
-    description: Path to the values file or directroy
+    description: Path to the values file or directory
     required: false
 
   additional_args:
-    description: Addtional args for the command "helm template"
+    description: Addtional args for the command "helm template" (e.g. --namespace kube-system, --skip-tests, --show-only etc.)
     required: false
 
   update_snapshot:
-    description: If set, update snapshot and create pull request
+    description: If set true, update snapshot and create pull request if snapshots are changed
     required: false
 
   disable_create_pull_request:
-    description: If set, run create pull request action https://github.com/peter-evans/create-pull-request
+    description: If set true, disable to create pull request even if snapshots are changed
     required: false
 
 runs:
