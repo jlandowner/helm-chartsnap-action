@@ -1,7 +1,6 @@
 # Helm chartsnap action
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Helm%20chartsnap%20action-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=github)](https://github.com/marketplace/actions/helm-chartsnap-action)
 ![Helm chartsnap](https://img.shields.io/badge/Repo-Helm%20chartsnap-repo?style=flat&logo=github&labelColor=24292e&color=orange)
-
 [![CI](https://github.com/jlandowner/helm-chartsnap-action/actions/workflows/test.yaml/badge.svg)](https://github.com/jlandowner/helm-chartsnap-action/actions/workflows/test.yaml)
 
 A GitHub action to do continuous snapshot testing for changes of your or third-party Helm chart values in your repository.
