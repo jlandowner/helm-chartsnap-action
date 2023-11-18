@@ -2,6 +2,10 @@ name: helm-chartsnap-action
 description: GitHub action to do continuous snapshot testing for Helm chart in your CI
 author: jlandowner
 
+branding:
+  color: blue
+  icon: anchor
+
 inputs:
   chart:
     description: Name of the Helm chart in remote repository or local chart directory path
