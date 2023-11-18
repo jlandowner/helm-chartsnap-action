@@ -7,6 +7,10 @@ branding:
   icon: anchor
 
 inputs:
+  token:
+    description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
+    default: ${{ github.token }}
+
   chart:
     description: Name of the Helm chart in remote repository or local chart directory path
     required: true
@@ -64,6 +68,7 @@ runs:
       if: ${{ inputs.update_snapshot && !inputs.disable_create_pull_request }}
       uses: peter-evans/create-pull-request@v5
       with:
+        token: ${{ inputs.token }}
         commit-message: Update snapshot by helm chartsnap action
         author: GitHub <noreply@github.com>
         branch: helm-chartsnap-action
