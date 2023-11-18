@@ -24,7 +24,6 @@ jobs:
   test_action_update_snapshot_remote_chart_specific_version:
     runs-on: ubuntu-latest
     name: Do snapshot ingress-nginx with specific version
-    needs: test_action_update_snapshot_remote_chart
     permissions:
       contents: write
       pull-requests: write
@@ -44,7 +43,6 @@ jobs:
   test_action_snapshot_local_chart:
     runs-on: ubuntu-latest
     name: Local chart snapshot and create PR if snapshot changed
-    needs: test_action_update_snapshot_remote_chart_specific_version
     steps:
       - name: Checkout
         uses: actions/checkout@v4
