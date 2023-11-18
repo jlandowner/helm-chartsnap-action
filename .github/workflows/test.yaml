@@ -3,32 +3,50 @@ name: CI
 on: [push]
 
 jobs:
-  test_action_remote_create_pr:
+  test_action_update_snapshot_remote_chart:
     runs-on: ubuntu-latest
-    name: Remote chart snapshot and create PR
+    name: Do snapshot ingress-nginx and create PR if snapshot changed
     permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Snapshot
+      - name: Update Snapshot
         uses: ./
         id: chartsnap
         with:
-          chart: ingress-nginx
-          repo: https://kubernetes.github.io/ingress-nginx
-          values: test/remote/ingress-nginx.values.yaml
+          chart:  ingress-nginx
+          repo:   https://kubernetes.github.io/ingress-nginx
+          values: charts/remote/ingress-nginx.values.yaml
           update_snapshot: true
 
-  test_action_local:
+  test_action_update_snapshot_remote_chart_specific_version:
+    runs-on: ubuntu-latest
+    name: Do snapshot ingress-nginx with specific version
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Snapshot test
+        uses: ./
+        id: chartsnap
+        with:
+          chart:  ingress-nginx
+          repo:   https://kubernetes.github.io/ingress-nginx
+          values: charts/remote/ingress-nginx.values.yaml
+          additional_args: "--version 4.8.2"
+
+  test_action_snapshot_local_chart:
     runs-on: ubuntu-latest
     name: Local chart snapshot
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Snapshot
+      - name: Snapshot test
         uses: ./
         id: chartsnap
         with:
-          chart: test/app1/
+          chart: charts/app1/
