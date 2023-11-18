@@ -16,35 +16,38 @@ Helm chartsnap action will:
 
 ```yaml
 jobs:
-  test_action_remote_create_pr:
+  chartsnap-ingress-nginx:
     runs-on: ubuntu-latest
-    name: Remote chart snapshot and create PR
+    name: Do snapshot ingress-nginx and create PR if snapshot changed
     permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Snapshot
+
+      - name: Chart Snapshot for ingress-nginx
         uses: jlandowner/helm-chartsnap-action@v1
-        id: chartsnap
         with:
-          chart: ingress-nginx
-          repo: https://kubernetes.github.io/ingress-nginx
-          values: test/remote/ingress-nginx.values.yaml
+          repo:   https://kubernetes.github.io/ingress-nginx
+          chart:  ingress-nginx
+          values: charts/remote/ingress-nginx.values.yaml
           update_snapshot: true
 
-  test_action_local:
+  chartsnap-local:
     runs-on: ubuntu-latest
     name: Local chart snapshot
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Snapshot
+
+      - name: Chart Snapshot for local chart
         uses: jlandowner/helm-chartsnap-action@v1
         id: chartsnap
         with:
-          chart: test/app1/
+          chart:  charts/app1/
+          values: charts/app1/test/
+          update_snapshot: true
 
 ```
 
@@ -74,13 +77,74 @@ Also you needs to set `permissions` in your workflow config.
 | `update_snapshot` | If set `true`, update snapshot and [create pull request](https://github.com/peter-evans/create-pull-request) if snapshots are changed | No | `false` |
 | `disable_create_pull_request` | If set `true`, disable to [create pull request](https://github.com/peter-evans/create-pull-request) even if snapshots are changed | No | `false` |
 
-## Example
+## Examples
 
-WIP
+### Action Usecases
 
-## Example Pull Request
+#### 1. Get snapshot of third-party chart using your values file continuously to get diff when chart version is bumpped up
 
-https://github.com/jlandowner/helm-chartsnap-action/pull/2
+```yaml
+jobs:
+  chartsnap-ingress-nginx:
+    runs-on: ubuntu-latest
+    name: Do snapshot ingress-nginx and create PR if snapshot changed
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Chart Snapshot for ingress-nginx
+        uses: jlandowner/helm-chartsnap-action@v1
+        with:
+          repo:   https://kubernetes.github.io/ingress-nginx # Third-party chart repository
+          chart:  ingress-nginx                              # Chart name in the repository to snapshot
+          values: charts/remote/ingress-nginx.values.yaml    # Your values file path
+          update_snapshot: true                              # Create PR if snapshot is changed
+```
+
+#### 2. Get snapshots of all expected usecase patterns of values files of your chart continuously
+
+```yaml
+  chartsnap-local:
+    runs-on: ubuntu-latest
+    name: Do snapshot app1 chart and create PR if snapshot changed
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Chart Snapshot for local chart
+        uses: jlandowner/helm-chartsnap-action@v1
+        id: chartsnap
+        with:
+          chart:  charts/app1/       # Chart directory path to snapshot
+          values: charts/app1/test/  # Directory including the values files
+          update_snapshot: true      # Create PR if snapshots are changed
+```
+
+#### 3. Test backward compatibility of your chart with old values continuously
+
+```yaml
+  chartsnap-local:
+    runs-on: ubuntu-latest
+    name: Test app1 chart's backward compatibility with old values
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Snapshot testing for app1 chart
+        uses: jlandowner/helm-chartsnap-action@v1
+        id: chartsnap
+        with:
+          chart:  charts/app1/       # Chart directory path to snapshot
+          values: charts/app1/test/  # Directory including the values files
+          # if snapshot is changed, this action fails and show the difference in log.
+```
+
+### Pull Request example
+
+See https://github.com/jlandowner/helm-chartsnap-action/pull/2
 
 ## License
 

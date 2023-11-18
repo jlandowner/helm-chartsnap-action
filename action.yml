@@ -1,5 +1,5 @@
 name: helm-chartsnap-action
-description: Do snapshot testing for Helm chart
+description: GitHub action to do continuous snapshot testing for Helm chart in your CI
 author: jlandowner
 
 inputs:
