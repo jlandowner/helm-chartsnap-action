@@ -38,8 +38,23 @@ jobs:
           repo:   https://kubernetes.github.io/ingress-nginx
           values: charts/remote/ingress-nginx.values.yaml
           additional_args: "--version 4.8.2"
+          update_snapshot: true
 
   test_action_snapshot_local_chart:
+    runs-on: ubuntu-latest
+    name: Local chart snapshot
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Snapshot test
+        uses: ./
+        id: chartsnap
+        with:
+          chart: charts/app1/
+          values: charts/app1/test/
+          update_snapshot: true
+
+  test_action_snapshot_local_chart_default:
     runs-on: ubuntu-latest
     name: Local chart snapshot
     steps:
