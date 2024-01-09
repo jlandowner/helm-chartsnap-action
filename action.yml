@@ -43,8 +43,7 @@ runs:
 
     - id: setup-chartsnap
       run: |
-        helmplugin=$(helm plugin ls | grep chartsnap)
-        [[ -z $helmplugin ]] && helm plugin install https://github.com/jlandowner/helm-chartsnap
+        helm plugin install https://github.com/jlandowner/helm-chartsnap || helm plugin update chartsnap
       shell: bash
 
     - id: run-chartsnap
