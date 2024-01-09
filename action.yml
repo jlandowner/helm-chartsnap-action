@@ -16,7 +16,7 @@ inputs:
     required: true
 
   repo:
-    description: URL of the remote Helm repository	
+    description: URL of the remote Helm repository
     required: false
 
   values:
@@ -43,7 +43,8 @@ runs:
 
     - id: setup-chartsnap
       run: |
-        helm plugin install https://github.com/jlandowner/helm-chartsnap
+        helmplugin=$(helm plugin ls | grep chartsnap)
+        [[ -z $helmplugin ]] && helm plugin install https://github.com/jlandowner/helm-chartsnap
       shell: bash
 
     - id: run-chartsnap
@@ -78,7 +79,7 @@ runs:
         delete-branch: true
         body: |
           Update snapshot by helm-chartsnap-action 🤖
-          
+
             CHART:  ${{ inputs.chart }}
             REPO:   ${{ inputs.repo }}
             VALUES: ${{ inputs.values }}
