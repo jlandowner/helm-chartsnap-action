@@ -36,7 +36,7 @@ jobs:
         with:
           chart:  ingress-nginx
           repo:   https://kubernetes.github.io/ingress-nginx
-          values: charts/remote/ingress-nginx.values.yaml
+          values: charts/remote/ingress-nginx2.values.yaml
           additional_args: "--version 4.8.2"
           update_snapshot: true
 
