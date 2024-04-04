@@ -84,7 +84,7 @@ runs:
             VALUES: ${{ inputs.values }}
 
     - name: Close Duplicated Pull Requests
-      if: ${{ inputs.update_snapshot && !inputs.disable_create_pull_request }}
+      if: steps.cpr.outcome == 'success'
       run: |
         SEARCH_VALUE="Update snapshot by helm-chartsnap-action 🤖 CHART: ${{ inputs.chart }} REPO: ${{ inputs.repo }} VALUES: ${{ inputs.values }}"
         PR_NUMBERS=$(gh pr list --state open --search "$SEARCH_VALUE" --json number | jq -r '.[].number')
