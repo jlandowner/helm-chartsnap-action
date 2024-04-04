@@ -91,7 +91,7 @@ runs:
           gh pr close $PR_NUMBER --comment "Auto-closing pull request" --delete-branch
         done
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ inputs.token }}
       shell: bash
 
     - name: Check outputs
