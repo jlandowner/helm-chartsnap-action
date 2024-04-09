@@ -39,7 +39,7 @@ runs:
   using: composite
   steps:
     - id: setup-helm
-      uses: azure/setup-helm@v3
+      uses: azure/setup-helm@v4
 
     - id: setup-chartsnap
       run: |
