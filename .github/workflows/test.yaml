@@ -43,6 +43,9 @@ jobs:
   test_action_snapshot_local_chart:
     runs-on: ubuntu-latest
     name: Local chart snapshot and create PR if snapshot changed
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
