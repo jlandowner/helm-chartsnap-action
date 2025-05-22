@@ -35,11 +35,18 @@ inputs:
     description: If set true, disable to create pull request even if snapshots are changed
     required: false
 
+  helm_version:
+    description: The helm version to use
+    default: 'latest'
+    required: true
+
 runs:
   using: composite
   steps:
     - id: setup-helm
       uses: azure/setup-helm@v4
+      with:
+        version: ${{ inputs.helm_version }}
 
     - id: setup-chartsnap
       run: |
