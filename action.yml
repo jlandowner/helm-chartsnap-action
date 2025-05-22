@@ -38,7 +38,7 @@ inputs:
   helm_version:
     description: The helm version to use
     default: 'latest'
-    required: true
+    required: false
 
 runs:
   using: composite

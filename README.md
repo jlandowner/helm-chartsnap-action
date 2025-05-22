@@ -77,6 +77,7 @@ Also you needs to set `permissions` in your workflow config.
 | `update_snapshot` | If set `true`, update snapshot and [create pull request](https://github.com/peter-evans/create-pull-request) if snapshots are changed | No | `false` |
 | `disable_create_pull_request` | If set `true`, disable to [create pull request](https://github.com/peter-evans/create-pull-request) even if snapshots are changed | No | `false` |
 | `token` | `GITHUB_TOKEN` (permissions `contents: write` and `pull-requests: write`) or a `repo` scoped [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). | No | `GITHUB_TOKEN` |
+| `helm_version` | Helm version to use `azure/setup-helm` | No | `latest` |
 
 ## Examples
 
