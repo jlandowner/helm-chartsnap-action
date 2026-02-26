@@ -1,0 +1,61 @@
+name: Update major version tag
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The semver tag to use as the source (e.g. v1.1.3)'
+        required: true
+
+jobs:
+  update-major-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Update major version tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = context.eventName === 'workflow_dispatch'
+              ? context.payload.inputs.tag
+              : context.ref.replace('refs/tags/', '');
+
+            const majorVersion = tag.match(/^(v\d+)/)?.[1];
+            if (!majorVersion) {
+              core.setFailed(`Invalid tag format: ${tag}. Expected format: v<major>.<minor>.<patch>`);
+              return;
+            }
+
+            const { data: tagData } = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `tags/${tag}`,
+            });
+            const sha = tagData.object.sha;
+
+            core.info(`Updating tag ${majorVersion} to ${sha} (from ${tag})`);
+
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${majorVersion}`,
+              sha,
+            }).catch(async (err) => {
+              if (err.status === 422) {
+                await github.rest.git.updateRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `tags/${majorVersion}`,
+                  sha,
+                  force: true,
+                });
+              } else {
+                throw err;
+              }
+            });
+
+            core.info(`Successfully updated ${majorVersion} -> ${tag} (${sha})`);
