@@ -50,7 +50,7 @@ runs:
 
     - id: setup-chartsnap
       run: |
-        helm plugin install https://github.com/jlandowner/helm-chartsnap || helm plugin update chartsnap
+        helm plugin install https://github.com/jlandowner/helm-chartsnap --verify=false || helm plugin update chartsnap
       shell: bash
 
     - id: run-chartsnap
