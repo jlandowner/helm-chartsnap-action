@@ -40,10 +40,16 @@ inputs:
     default: 'latest'
     required: false
 
+  install_helm:
+    description: If set false, skip installing helm binary. Use this when helm is already installed in the runner
+    default: 'true'
+    required: false
+
 runs:
   using: composite
   steps:
     - id: setup-helm
+      if: ${{ inputs.install_helm != 'false' }}
       uses: azure/setup-helm@v5
       with:
         version: ${{ inputs.helm_version }}
